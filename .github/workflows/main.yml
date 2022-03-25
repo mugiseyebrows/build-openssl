@@ -1,0 +1,27 @@
+name: main
+on: [push]
+jobs:
+  main:
+    runs-on: windows-2022
+    steps:
+      - run: |
+          @echo off
+          set CHERE_INVOKING=yes
+          set MSYSTEM=MINGW64
+          set BASH=C:\msys64\usr\bin\bash
+          %BASH% -lc "pacman --noconfirm -Syuu"
+          %BASH% -lc "pacman --noconfirm -Syuu"
+          %BASH% -lc "pacman -S --needed --noconfirm base-devel mingw-w64-x86_64-toolchain zip make"
+          curl -L -o openssl-1.1.1n.tar.gz https://www.openssl.org/source/openssl-1.1.1n.tar.gz
+          %BASH% -lc "tar xf openssl-1.1.1n.tar.gz"
+          pushd openssl-1.1.1n
+            %BASH% -lc './config --prefix="%CD%/../OpenSSL" --openssldir=ssl'
+            %BASH% -lc "make install"
+          popd
+          %BASH% -lc "zip -r OpenSSL.zip OpenSSL"
+        shell: cmd
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: OpenSSL.zip
+        if: startsWith(github.ref, 'refs/tags/')
+        name: release
