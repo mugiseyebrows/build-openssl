@@ -21,6 +21,8 @@ jobs:
             %BASH% -lc './config --prefix="%CD%/../OpenSSL" --openssldir=ssl'
             %BASH% -lc "make install"
           popd
+          %BASH% -lc "strip OpenSSL\bin\libcrypto-1_1-x64.dll"
+          %BASH% -lc "strip OpenSSL\bin\libssl-1_1-x64.dll"
           %BASH% -lc "zip -r OpenSSL.zip OpenSSL"
         shell: cmd
       - uses: softprops/action-gh-release@v1
