@@ -24,7 +24,12 @@ jobs:
         name: update msys2
 
       - run: |
+          if "${{ matrix.msystem }}" equ "MINGW32" (
+          %BASH% -lc "pacman -S --needed --noconfirm base-devel mingw-w64-i686-toolchain zip make"
+          ) else (
           %BASH% -lc "pacman -S --needed --noconfirm base-devel mingw-w64-x86_64-toolchain zip make"
+          )
+
         shell: cmd
         name: install mingw toolchain and tools
 
