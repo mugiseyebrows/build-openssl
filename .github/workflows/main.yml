@@ -1,16 +1,19 @@
 name: main
-on:
-  push:
-    tags:
-    - '*'
+on: push
 jobs:
   main:
+    strategy:
+      matrix:
+        msystem: [MINGW64, MINGW32]
+      fail-fast: false
     runs-on: windows-2022
     steps:
       - run: |
           echo CHERE_INVOKING=yes>> %GITHUB_ENV%
-          echo MSYSTEM=MINGW64>> %GITHUB_ENV%
+          echo MSYSTEM=${{ matrix.msystem }}>> %GITHUB_ENV%
           echo BASH=C:\msys64\usr\bin\bash>> %GITHUB_ENV%
+          if "${{ matrix.msystem }}" equ "MINGW32" echo MSYSTEM_=mingw32>> %GITHUB_ENV%
+          if "${{ matrix.msystem }}" equ "MINGW64" echo MSYSTEM_=mingw64>> %GITHUB_ENV%
         shell: cmd
         name: prepare env
 
@@ -40,17 +43,12 @@ jobs:
         name: build and install
 
       - run: |
-          %BASH% -lc "strip OpenSSL/bin/*.dll"
-        shell: cmd
-        name: strip dlls
-
-      - run: |
-          %BASH% -lc "zip -r OpenSSL.zip OpenSSL"
+          %BASH% -lc "zip -r OpenSSL-1.1.1n-%MSYSTEM_%.zip OpenSSL"
         shell: cmd
         name: zip package
 
       - uses: softprops/action-gh-release@v1
         with:
-          files: OpenSSL.zip
+          files: OpenSSL-1.1.1n-%MSYSTEM_%.zip
         if: startsWith(github.ref, 'refs/tags/')
         name: release
