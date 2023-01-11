@@ -4,6 +4,9 @@ jobs:
   main:
     strategy:
       matrix:
+        include:
+        - { msystem: MINGW32, arch: i686}
+        - { msystem: MINGW64, arch: x86_64}
         msystem: [MINGW64, MINGW32]
       fail-fast: false
     runs-on: windows-2022
@@ -12,8 +15,6 @@ jobs:
           echo CHERE_INVOKING=yes>> %GITHUB_ENV%
           echo MSYSTEM=${{ matrix.msystem }}>> %GITHUB_ENV%
           echo BASH=C:\msys64\usr\bin\bash>> %GITHUB_ENV%
-          if "${{ matrix.msystem }}" equ "MINGW32" echo MSYSTEM_=mingw32>> %GITHUB_ENV%
-          if "${{ matrix.msystem }}" equ "MINGW64" echo MSYSTEM_=mingw64>> %GITHUB_ENV%
         shell: cmd
         name: prepare env
 
@@ -24,12 +25,7 @@ jobs:
         name: update msys2
 
       - run: |
-          if "${{ matrix.msystem }}" equ "MINGW32" (
-          %BASH% -lc "pacman -S --needed --noconfirm base-devel mingw-w64-i686-toolchain zip make"
-          ) else (
-          %BASH% -lc "pacman -S --needed --noconfirm base-devel mingw-w64-x86_64-toolchain zip make"
-          )
-
+          %BASH% -lc "pacman -S --needed --noconfirm base-devel mingw-w64-${{ matrix.arch }}-toolchain zip make"
         shell: cmd
         name: install mingw toolchain and tools
 
@@ -48,12 +44,12 @@ jobs:
         name: build and install
 
       - run: |
-          %BASH% -lc "zip -r OpenSSL-1.1.1n-%MSYSTEM_%.zip OpenSSL"
+          %BASH% -lc "zip -r OpenSSL-1.1.1n-${{ matrix.arch }}.zip OpenSSL"
         shell: cmd
         name: zip package
 
       - uses: softprops/action-gh-release@v1
         with:
-          files: OpenSSL-1.1.1n-%MSYSTEM_%.zip
+          files: OpenSSL-1.1.1n-${{ matrix.arch }}.zip
         if: startsWith(github.ref, 'refs/tags/')
         name: release
