@@ -1,5 +1,12 @@
 name: main
 on: push
+
+env:
+  openssl_url: https://www.openssl.org/source/old/1.0.0/openssl-1.0.0s.tar.gz
+  openssl_gz: openssl-1.0.0s.tar.gz
+  openssl_dir: openssl-1.0.0s
+  openssl_version: 1.0.0s
+
 jobs:
   main:
     strategy:
@@ -30,13 +37,13 @@ jobs:
         name: install mingw toolchain and tools
 
       - run: |
-          curl -L -o openssl-1.1.1n.tar.gz https://www.openssl.org/source/openssl-1.1.1n.tar.gz
-          %BASH% -lc "tar xf openssl-1.1.1n.tar.gz"
+          curl -L -o %openssl_gz% %openssl_url%
+          %BASH% -lc "tar xf %openssl_gz%"
         shell: cmd
         name: download and unzip sources
 
       - run: |
-          pushd openssl-1.1.1n
+          pushd %openssl_dir%
             %BASH% -lc './config --prefix="%CD%/../OpenSSL" --openssldir=ssl'
             %BASH% -lc "make install"
           popd
@@ -44,12 +51,12 @@ jobs:
         name: build and install
 
       - run: |
-          %BASH% -lc "zip -r OpenSSL-1.1.1n-${{ matrix.arch }}.zip OpenSSL"
+          %BASH% -lc "zip -r OpenSSL-%openssl_version%-${{ matrix.arch }}.zip OpenSSL"
         shell: cmd
         name: zip package
 
       - uses: softprops/action-gh-release@v1
         with:
-          files: OpenSSL-1.1.1n-${{ matrix.arch }}.zip
+          files: OpenSSL-%openssl_version%-${{ matrix.arch }}.zip
         if: startsWith(github.ref, 'refs/tags/')
         name: release
