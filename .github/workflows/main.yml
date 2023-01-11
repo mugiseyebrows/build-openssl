@@ -2,10 +2,10 @@ name: main
 on: push
 
 env:
-  openssl_url: https://www.openssl.org/source/old/1.0.0/openssl-1.0.0s.tar.gz
-  openssl_gz: openssl-1.0.0s.tar.gz
-  openssl_dir: openssl-1.0.0s
-  openssl_version: 1.0.0s
+  openssl_url: https://www.openssl.org/source/old/0.9.x/openssl-0.9.8zf.tar.gz
+  openssl_gz: openssl-0.9.8zf.tar.gz
+  openssl_dir: openssl-0.9.8zf
+  openssl_version: 0.9.8zf
 
 jobs:
   main:
