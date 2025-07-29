@@ -10,4 +10,4 @@ cd openssl-3.5.1
 perl Configure --prefix=C:/openssl-3.5.1
 nmake
 nmake install
-7z a -y C:/openssl-3.5.1 openssl-3.5.1.zip
+7z a -y openssl-3.5.1.zip C:\openssl-3.5.1

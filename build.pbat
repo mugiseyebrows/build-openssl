@@ -9,7 +9,7 @@ def main
     perl Configure --prefix=C:/openssl-3.5.1
     nmake
     nmake install
-    zip(C:/openssl-3.5.1, openssl-3.5.1.zip)
+    zip(openssl-3.5.1.zip, C:\openssl-3.5.1)
     github_upload(C:/openssl-3.5.1)
     github_release(openssl-3.5.1.zip)
 
