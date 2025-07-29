@@ -3,7 +3,8 @@ def main
     download(https://github.com/openssl/openssl/releases/download/openssl-3.5.1/openssl-3.5.1.tar.gz)
     unzip(openssl-3.5.1.tar.gz)
     unzip(openssl-3.5.1.tar)
-    dir
+    choco install nasm
+    add_path(C:\Program Files\NASM)
     cd openssl-3.5.1
     perl Configure --prefix=C:/openssl-3.5.1
     nmake
