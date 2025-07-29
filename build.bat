@@ -6,8 +6,9 @@ curl -L -o openssl-3.5.1.tar.gz https://github.com/openssl/openssl/releases/down
 7z x -y openssl-3.5.1.tar.gz
 7z x -y openssl-3.5.1.tar
 choco install nasm
-cd openssl-3.5.1
-perl Configure --prefix=C:/openssl-3.5.1
-nmake
-nmake install
+pushd openssl-3.5.1
+    perl Configure --prefix=C:/openssl-3.5.1
+    nmake
+    nmake install
+popd
 7z a -y openssl-3.5.1.zip C:\openssl-3.5.1
