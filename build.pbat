@@ -1,0 +1,14 @@
+def main
+    call_vcvars()
+    download(https://github.com/openssl/openssl/releases/download/openssl-3.5.1/openssl-3.5.1.tar.gz)
+    unzip(openssl-3.5.1.tar.gz)
+    unzip(openssl-3.5.1.tar)
+    cd openssl-3.5.1
+    perl Configure --prefix=C:/openssl-3.5.1
+    nmake
+    nmake install
+    zip(C:/openssl-3.5.1, openssl-3.5.1.zip)
+    github_upload(C:/openssl-3.5.1)
+    github_release(openssl-3.5.1.zip)
+
+github_workflow 1
